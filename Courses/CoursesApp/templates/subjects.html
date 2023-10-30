@@ -1,0 +1,10 @@
+{% block content %}
+<h1>All Subject List</h1>
+<ul>
+    {% for subjects in subjects %}
+    <li>
+        {{Subject.title}}: {% if todo.completed %}Complete{% else %}Not completed {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock  %}
