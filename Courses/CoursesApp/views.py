@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse
-from .models import Teacher, Student
+from .models import Teacher, Student, Subject, Enrollment, Course
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.core.exceptions import ObjectDoesNotExist
@@ -22,12 +22,12 @@ def Registration(request):
             error_message = "Username already exists"
             return render(request, 'registration.html', {'error_message': error_message})
 
-        user = Student(Username=username, Password=password, Name=name, Surname=surname)
+        user = Student(Username=username, Password=password, Name=name, Surname=surname, Photo = photo)
 
-        if photo:  # Check if a photo was uploaded
-            # Save the uploaded photo to the 'media' folder
-            file_name = default_storage.save(photo.name, ContentFile(photo.read()))
-            user.Photo = file_name
+        # if photo:  # Check if a photo was uploaded
+        #     # Save the uploaded photo to the 'media' folder
+        #     file_name = default_storage.save(photo.name, ContentFile(photo.read()))
+        #     user.Photo = file_name
 
         user.save()
         
@@ -45,8 +45,7 @@ def Login(request):
         
         try:
             teacher = Teacher.objects.get(Username=username, Password=password)
-            request.session['name'] = teacher.Name
-            request.session['surname'] = teacher.Surname
+            request.session['user'] = teacher
             request.session['currentRole'] = "t"
             return redirect("teacherBio")
         except:
@@ -55,8 +54,7 @@ def Login(request):
         try:
             student = Student.objects.get(Username=username, Password=password)
             
-            request.session['name'] = student.Name
-            request.session['surname'] = student.Surname
+            request.session['username'] = student.Username
             request.session['currentRole'] = "s"
             return redirect("studentBio")
         except:
@@ -71,17 +69,17 @@ def Login(request):
 # shows student info and <ul> of links to subjects.html, teachers.html, MyCourses.html
 def StudentBio(request):
     if request.session['currentRole'] == 's':
-        name = request.session['name']
-        surname = request.session['surname']
-    
+        username = request.session['username']
+        student = Student.objects.get(Username = username)
 
-        return render(request, "studentBio.html", {"name": name, "surname":surname})
+        return render(request, "studentBio.html", {"user": student})
     else:
         return HttpResponse("Bad request")
 
 # shows html page with ALL subjects list(math, pe, chemistry, english)
 def Subjects(request):
-    return render(request, "subjects.html")
+    subjects = Subject.objects.all()
+    return render(request, "subjects.html", {"subjects": subjects})
 
 # shows all courses that student enrolled
 def MyCourses(request):
@@ -98,11 +96,9 @@ def Course(request):
 # teacher info panel, see I Teach => teachCourses.html
 def TeacherBio(request):
     if request.session['currentRole'] == 't':
-        name = request.session['name']
-        surname = request.session['surname']
-    
+        user = request.session['user']
 
-        return render(request, "teacherBio.html", {"name": name, "surname":surname})
+        return render(request, "teacherBio.html", {"user": user})
     else:
         return HttpResponse("Bad request")
 

@@ -6,14 +6,14 @@ class Student(models.Model):
     Password = models.CharField(max_length=64)
     Name = models.CharField(max_length=60)
     Surname = models.CharField(max_length=60)
-    Photo = models.ImageField(upload_to="media/", blank=True, null=True)
+    Photo = models.ImageField(upload_to="images/", blank=True, null=True)
 
 class Teacher(models.Model):
     Username = models.CharField(max_length=30, unique=True)
     Password = models.CharField(max_length=64)
     Name = models.CharField(max_length=60)
     Surname = models.CharField(max_length=60)
-    Photo = models.ImageField(upload_to="media/", blank=True, null=True)
+    Photo = models.ImageField(upload_to="images/", blank=True, null=True)
     Bio = models.CharField(max_length=200)
 
 
