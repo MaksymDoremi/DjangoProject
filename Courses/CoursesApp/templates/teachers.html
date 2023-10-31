@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Student Bio</title>
+    <title>Teachers</title>
   </head>
 
   <body style="min-width: 450px; " class="d-flex flex-column min-vh-100">
@@ -29,22 +29,21 @@
       </div>
     </nav>
 
+    <h1 style="align-self: center;">All Teachers List</h1>
     {% comment %}MAIN{% endcomment %}
     <div class="container" style="display: flex; align-items: center; padding-top: 40px; padding-bottom: 40px;">
-      {% comment %}user card{% endcomment %}
-      <div style="width: 50%;">
-        <h1><strong>Hello, {{ user.Name }} {{ user.Surname }}</strong></h1>
-
-        <img src="{{ user.Photo.url }}" class="rounded" style="max-width: 100%; height: 100px; align-self: start" />
-      </div>
-	  {% comment %} Unordered list for items {% endcomment %}
-	  <div style="width: 50%;">
-		<ul style="list-style-type: none;">
-			<li><a href="{% url 'subjects' %}">Subjects</a></li>
-			<li><a href="{% url 'teachers' %}">Teachers</a></li>
-			<li><a href="{% url 'myCourses' %}">My courses</a></li>
-		</ul>
-	  </div>
+      <div class="row g-2"></div>
+      {% for teacher in teachers %}
+        <div class="col-xl-4 col-md-6 col-sm-12">
+          <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="{{ teacher.Photo.url }}" alt="Card image cap" />
+            <div class="card-body">
+              <h4><strong>{{ teacher.Name }} {{ teacher.Surname }}</strong></h4>
+              <p class="card-text">{{ teacher.Bio }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
     </div>
 
     <!-- FOOTER -->

@@ -83,14 +83,29 @@ def Subjects(request):
 
 # shows all courses that student enrolled
 def MyCourses(request):
-    return None
+    username = request.session['username']
+    if username:
+        # Get the student instance with the specified username
+        student = Student.objects.get(Username=username)
+
+        # Retrieve the enrollments for the student
+        enrollments = Enrollment.objects.filter(Student=student)
+
+        # Retrieve the courses for the student based on enrollments
+        courses = Course.objects.filter(enrollment__in=enrollments)
+
+        # Now you have a queryset `courses` containing all the courses for the student
+        return render(request, "myCourses.html", {"myCourses": courses})
+
+    else:
+        return HttpResponse("Bad request")
 
 # student cilcks on Subject and it show all Courses related to subject => cards with title and so on...
 def AllCourses(request):
     return None
 
 # details of the course, user clicks on card in AllCourses and open html page with single course
-def Course(request):
+def SingleCourse(request):
     return None
 
 # teacher info panel, see I Teach => teachCourses.html
@@ -104,7 +119,8 @@ def TeacherBio(request):
 
 # user sees all teachers and their bio
 def Teachers(request):
-    return None
+    teachers = Teacher.objects.all()
+    return render(request, "teachers.html", {"teachers": teachers})
 
 # single teacher, and shows courses cards he teaches => Course.html
 def SingleTeacher(request):
