@@ -34,9 +34,9 @@
       <div>
         
           <h1>All Subject List</h1>
-          <ul>
+          <ul style="list-style-type: none;">
             {% for subject in subjects %}
-              <li>{{ subject.Name }}</li>
+              <li><a href="{% url 'allCourses' subject_id=subject.id %}">{{ subject.Name }}</a></li>
             {% endfor %}
           </ul>
         
