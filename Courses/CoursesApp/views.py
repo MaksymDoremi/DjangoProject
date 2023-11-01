@@ -131,11 +131,11 @@ def SingleCourse(request, course_id):
     course = Course.objects.get(id=course_id)
 
     if request.method == 'POST':
-        username = request.session['username']
-        student = Student.objects.get(Username=username)
-        course = Course.objects.get(id=course_id)
-
         try:
+            username = request.session['username']
+            student = Student.objects.get(Username=username)
+            course = Course.objects.get(id=course_id)
+
             enroll = Enrollment(Student = student, Course = course)
             enroll.save()
             # render success message
@@ -152,9 +152,10 @@ def SingleCourse(request, course_id):
 # teacher info panel, see I Teach => teachCourses.html
 def TeacherBio(request):
     if request.session['currentRole'] == 't':
-        user = request.session['user']
+        username = request.session['username']
+        teacher = Teacher.objects.get(Username = username)
 
-        return render(request, "teacherBio.html", {"user": user})
+        return render(request, "teacherBio.html", {"user": teacher})
     else:
         return HttpResponse("Bad request")
 
@@ -164,12 +165,19 @@ def Teachers(request):
     return render(request, "teachers.html", {"teachers": teachers})
 
 # single teacher, and shows courses cards he teaches => Course.html
-def SingleTeacher(request):
-    return None
+def SingleTeacher(request, teacher_id):
+    teacher = Teacher.objects.get(id=teacher_id)
+    courses = Course.objects.filter(Teacher__id = teacher_id)
+    return render(request, 'teacher.html', {"teacher": teacher, "courses" : courses})
 
 # shows all course that teachers teaches => course.html
-def TeachCourses(request):
+def TeachCourses(request, teacher_id):
     # join by teacher
-    # coursesTeacherTeaches = Course.objects.filter(Teacher = currentTeacher)
+    teacher = Teacher.objects.get(id=teacher_id)
+    courses = Course.objects.filter(Teacher=teacher)
+
+    # Annotate the courses queryset with enrollment counts for each course
+    for course in courses:
+        course.enrollment_count = Enrollment.objects.filter(Course=course).count()
     
-    return None
+    return render(request, "teachCourses.html", {"courses": courses, "teacher": teacher})

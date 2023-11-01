@@ -9,9 +9,9 @@ urlpatterns = [
     path("teacherBio/", views.TeacherBio, name="teacherBio"), 
     path("subjects/", views.Subjects, name="subjects"),
     path("teachers/", views.Teachers, name="teachers"),
-    path("teacher/", views.SingleTeacher, name="teacher"),  
+    path("teacher/<int:teacher_id>", views.SingleTeacher, name="teacher"),  
     path("myCourses/", views.MyCourses, name="myCourses"),
     path("allCourses/<int:subject_id>", views.AllCourses, name="allCourses"),
     path("course/<int:course_id>", views.SingleCourse, name="course"),
-    path("teachCourses/", views.TeachCourses, name="teachCourses")
+    path("teachCourses/<int:teacher_id>", views.TeachCourses, name="teachCourses")
 ]

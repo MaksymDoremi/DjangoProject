@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Teacher Bio</title>
+    <title>Teacher</title>
   </head>
 
   <body style="min-width: 450px; " class="d-flex flex-column min-vh-100">
@@ -29,22 +29,40 @@
       </div>
     </nav>
 
-	{% comment %}MAIN{% endcomment %}
-    <div class="container" style="display: flex; align-items: center; padding-top: 40px; padding-bottom: 40px;">
-      {% comment %}user card{% endcomment %}
-      <div style="width: 50%;">
-        <h1><strong>Hello, {{ user.Name }} {{ user.Surname }}</strong></h1>
-
-        <img src="{{ user.Photo.url }}" class="rounded" style="max-width: 100%; height: 200px; align-self: start" />
-      </div>
-	  <div style="width: 50%;">
-        <ul style="list-style-type: none;">
-          <li>
-            <a href="{% url 'teachCourses' teacher_id=user.id %}">Courses I teach</a>
-          </li>
-        </ul>
+    <h1 style="align-self: center;">Teacher</h1>
+    {% comment %}MAIN{% endcomment %}
+    <div class="container mt-2">
+      <p style="font-size: 30px;">
+        <strong>Teacher:</strong> {{ teacher.Name }} {{ teacher.Surname }}
+      </p>
+      <p style="font-size: 30px;">
+        <strong>Info:</strong> {{ teacher.Bio }}
+      </p>
+      <img src="{{ teacher.Photo.url }}" class="rounded" style="max-width: 100%; height: 200px; align-self: start" />
+      <div class="row g-2 mt-3">
+        {% for course in courses %}
+          <div class="col-xl-4 col-md-6 col-sm-12 text-center" style="display: flex; flex-direction: row; justify-content: center;">
+            <div class="card" style="width: 18rem;">
+              <a href="{% url 'course' course_id=course.id %}" style=" color: inherit;
+              text-decoration: inherit;">
+                <div class="card-body">
+                  <h5 class="card-title">{{ course.Name }}</h5>
+                  <h6 class="card-subtitle mb-2 text-body-secondary">Subject: {{ course.Subject.Name }}</h6>
+                  <h6 class="card-subtitle mb-2 text-body-secondary">Teacher: {{ course.Teacher.Name }} {{ course.Teacher.Surname }}</h6>
+                  <h6 class="card-subtitle mb-2 text-body-secondary">Price: {{ course.Price }}Kc</h6>
+                  <form method="post" action="{% url 'allCourses' subject_id=course.Subject.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="course_id" value="{{ course.id }}" />
+                    <button type="submit" class="btn btn-primary">Enroll</button>
+                  </form>
+                </div>
+              </a>
+            </div>
+          </div>
+        {% endfor %}
       </div>
     </div>
+
     <!-- FOOTER -->
     <div class="container mt-auto" style=" bottom: 0; ">
       <footer class="d-flex flex-wrap justify-content-center justify-content-md-between align-items-center py-3 my-4 border-top">
