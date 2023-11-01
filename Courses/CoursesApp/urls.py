@@ -12,6 +12,6 @@ urlpatterns = [
     path("teacher/", views.SingleTeacher, name="teacher"),  
     path("myCourses/", views.MyCourses, name="myCourses"),
     path("allCourses/<int:subject_id>", views.AllCourses, name="allCourses"),
-    path("course/", views.SingleCourse, name="course"),
+    path("course/<int:course_id>", views.SingleCourse, name="course"),
     path("teachCourses/", views.TeachCourses, name="teachCourses")
 ]

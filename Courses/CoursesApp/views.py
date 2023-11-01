@@ -103,8 +103,8 @@ def MyCourses(request):
 # student cilcks on Subject and it show all Courses related to subject => cards with title and so on...
 def AllCourses(request, subject_id):
     courses = Course.objects.filter(Subject__id=subject_id)
-    subject = Subject.objects.filter(id=subject_id)
-
+    subject = Subject.objects.get(id=subject_id)
+    print(subject.Name)
     # can enroll same course and student, cause in real life you can enroll in different periods of time
     if request.method == 'POST':
         username = request.session['username']
@@ -122,14 +122,32 @@ def AllCourses(request, subject_id):
             print("can't enroll")
             error_message = f"Can't enroll to course {course.Name}"
             return render(request, 'allCourses.html', {'error_message': error_message, "courses" : courses, "subject": subject})
-    
-    
-    return render(request, "allCourses.html", {"courses" : courses, "subject": subject})
+    else:
+        return render(request, "allCourses.html", {"courses" : courses, "subject": subject})
 
 
 # details of the course, user clicks on card in AllCourses and open html page with single course
-def SingleCourse(request):
-    return None
+def SingleCourse(request, course_id):
+    course = Course.objects.get(id=course_id)
+
+    if request.method == 'POST':
+        username = request.session['username']
+        student = Student.objects.get(Username=username)
+        course = Course.objects.get(id=course_id)
+
+        try:
+            enroll = Enrollment(Student = student, Course = course)
+            enroll.save()
+            # render success message
+            success_message = f"Successfully enrolled to course {course.Name}"
+            return render(request, 'course.html', {'success_message': success_message, "course" : course})
+        except:
+            # render error message
+            print("can't enroll")
+            error_message = f"Can't enroll to course {course.Name}"
+            return render(request, 'course.html', {'error_message': error_message, "course" : course})
+
+    return render(request, 'course.html', {"course": course})
 
 # teacher info panel, see I Teach => teachCourses.html
 def TeacherBio(request):

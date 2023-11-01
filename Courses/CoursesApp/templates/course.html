@@ -29,7 +29,7 @@
       </div>
     </nav>
 
-    <h1 style="align-self: center;">Courses for {{ subject.Name }}</h1>
+    <h1 style="align-self: center;">Course {{ course.Name }}</h1>
     {% comment %}Success alert{% endcomment %}
 
     <div class="alert alert-success alert-dismissible fade show container-sm mt-3" role="alert" id="successAlert" style="display: none;">
@@ -45,32 +45,15 @@
     </div>
     {% comment %}MAIN{% endcomment %}
     <div class="container mt-2">
-      <div class="row g-2">
-        {% if courses.count == 0 %}
-          <h3>No courses for this subject</h3>
-        {% endif %}
-
-        {% for course in courses %}
-          <div class="col-xl-4 col-md-6 col-sm-12 text-center" style="display: flex; flex-direction: row; justify-content: center;">
-            <div class="card" style="width: 18rem;">
-              <a href="{% url 'course' course_id=course.id %}" style=" color: inherit;
-              text-decoration: inherit;">
-                <div class="card-body">
-                  <h5 class="card-title">{{ course.Name }}</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">Subject: {{ course.Subject.Name }}</h6>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">Teacher: {{ course.Teacher.Name }} {{ course.Teacher.Surname }}</h6>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">Price: {{ course.Price }}Kc</h6>
-                  <form method="post" action="{% url 'allCourses' subject_id=course.Subject.id %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="course_id" value="{{ course.id }}" />
-                    <button type="submit" class="btn btn-primary">Enroll</button>
-                  </form>
-                </div>
-              </a>
-            </div>
-          </div>
-        {% endfor %}
-      </div>
+        <p style="font-size: 30px;"><strong>Subject:</strong> {{ course.Subject.Name }}</p>
+        <p style="font-size: 30px;"><strong>Teacher:</strong> {{ course.Teacher.Name }} {{ course.Teacher.Surname }}</p>
+        <p style="font-size: 30px;"><strong>Info:</strong> {{ course.Info }}</p>
+        <p style="font-size: 30px;"><strong>Price:</strong> {{ course.Price }} Kc</p>
+        <form method="post" action="{% url 'course' course_id=course.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="course_id" value="{{ course.id }}" />
+            <button type="submit" class="btn btn-primary">Enroll</button>
+          </form>
     </div>
 
     <!-- FOOTER -->
